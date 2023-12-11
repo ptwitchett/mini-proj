@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Login to <%=shopName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <h1>Login to <%=shopName%></h1>
+    <form method="POST" action="/loggedin">
+        <p>Username: <input id="userN" type="text" name="userN" value="username" /></p>
+        <p>Password: <input id="password" type="text" name="password" value="password" /></p>
+
+        <input type="submit" value="Login" />
+      </form>
+  </body>
+</html>

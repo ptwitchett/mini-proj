@@ -5,12 +5,18 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
-    <h1><%=shopName%> Shop</h1>
-    <h2>Here are the books that we sell:</h2>
+    <h1><%=shopName%></h1>
+    <h2>Here are the hotels available:</h2>
     <ul>
-      <% availableBooks.forEach(function(book) { %>
-        <li><%= book.name %>, £<%=book.price%> </li>
+      <% availablehotels.forEach(function(hotels) { %>
+        <li><%= hotels.name %>, £<%=hotels.price%> </li>
       <% }) %>
     </ul>
+    <h2>Make a booking here:</h2>
+    <form method="POST" action="/booked">
+      <p>Username: <input id="userN" type="text" name="userN" value="username" /></p>
+      <p>Hotel Name: <input id="hotels" type="text" name="hotels" value="hotels" /></p>
+      <input type="submit" value="booked" />
+    </form>
     </body>
 </html>
