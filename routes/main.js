@@ -47,7 +47,7 @@ module.exports = function(app, shopData) {
                   return console.error(err.message);
                 }
                 else
-                res.send(' This user is added to database, name: '+ req.body.first + ' price '+ req.body.last);
+                res.send(' This user is added to database, name: '+ req.body.first + ' '+ req.body.last);
                 
                 });
           })                                                             
