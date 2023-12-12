@@ -5,12 +5,13 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
-    <h1><%=shopName%> Shop</h1>
-    <h2>Here are our bargain books:</h2>
+    <h1><%=shopName%></h1>
+    <h2>Here are our bookings:</h2>
     <ul>
-      <% availableBooks.forEach(function(book) { %>
-        <li><%= book.name %>, £<%=book.price%> </li>
+      <% availablebookings.forEach(function(bookings) { %>
+        <li>User <%=bookings.userN %> has reserved hotel room <%= bookings.name%> </li>
       <% }) %>
     </ul>
+
     </body>
 </html>
