@@ -101,19 +101,44 @@ module.exports = function(app, shopData) {
          });
     });
 
-    app.post('/booked', function (req,res) {
-        let sqlquery = "INSERT INTO bookings (userN, name) VALUES (?,?)";
 
-        let newrecord = [req.body.userN, req.body.hotels];
+    app.post('/booked', function (req, res) {
+        let userCheckQuery = "SELECT * FROM users WHERE userN = ?";
+        let hotelCheckQuery = "SELECT * FROM hotels WHERE name = ?";
+        let insertBookingQuery = "INSERT INTO bookings (userN, name) VALUES (?, ?)";
+    
+        // Check if userN exists in the users table
+        db.query(userCheckQuery, req.body.userN, (userErr, userResult) => {
+            if (userErr) {
+                return console.error(err.message);
+            }
+            if (userResult.length === 0) {
+                return console.error(err.message);
+            }
+    
+            // Check if hotels exist in the hotels table
+            db.query(hotelCheckQuery, [req.body.hotels], (hotelErr, hotelResult) => {
+                if (hotelErr) {
+                    return console.error(err.message);
+                }
+                if (hotelResult.length === 0) {
+                    return console.error(err.message);
+                }
+    
+                // Insert booking information into the bookings table
+                db.query(insertBookingQuery, [req.body.userN, req.body.hotels], (insertErr, insertResult) => {
+                    if (insertErr) {
+                        return console.error(insertErr.message);
+                    }
+                    res.send('Thank you ' + req.body.userN + ' for booking a hotel room at ' + req.body.hotels);
+                });
+            });
+        });
+    });
+    
 
-           db.query(sqlquery, newrecord, (err, result) => {
-             if (err) {
-               return console.error(err.message);
-             }
-             else
-             res.send('Thank you '+ req.body.userN + ' for booking a hotel room '+ req.body.hotels);
-             });                                                         
-    }); 
+
+
 
     app.get('/listusers', function(req, res) {
         let sqlquery = "SELECT * FROM users"; // query database to get all the users
@@ -128,36 +153,3 @@ module.exports = function(app, shopData) {
          });
     });
 
-    app.get('/addbook', function (req, res) {
-        res.render('addbook.ejs', shopData);
-     });
- 
-     app.post('/bookadded', function (req,res) {
-           // saving data in database
-           let sqlquery = "INSERT INTO books (name, price) VALUES (?,?)";
-           // execute sql query
-           let newrecord = [req.body.name, req.body.price];
-           db.query(sqlquery, newrecord, (err, result) => {
-             if (err) {
-               return console.error(err.message);
-             }
-             else
-             res.send(' This book is added to database, name: '+ req.body.name + ' price '+ req.body.price);
-
-
-             });
-       });    
-
-       app.get('/bargainbooks', function(req, res) {
-        let sqlquery = "SELECT * FROM books WHERE price < 20";
-        db.query(sqlquery, (err, result) => {
-          if (err) {
-             res.redirect('./');
-          }
-          let newData = Object.assign({}, shopData, {availableBooks:result});
-          console.log(newData)
-          res.render("bargains.ejs", newData)
-        });
-    });       
-
-}
