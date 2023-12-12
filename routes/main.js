@@ -12,9 +12,7 @@ module.exports = function(app, shopData) {
     });
     app.get('/search-result', function (req, res) {
         //searching in the database
-        //res.send("You searched for: " + req.query.keyword);
-
-        let sqlquery = "SELECT * FROM hotels WHERE name LIKE '%" + req.query.keyword + "%'"; // query database to get all the books
+        let sqlquery = "SELECT * FROM hotels WHERE name LIKE '%" + req.query.keyword + "%'"; // query database to get all the hotels
         // execute sql query
         db.query(sqlquery, (err, result) => {
             if (err) {
@@ -25,10 +23,12 @@ module.exports = function(app, shopData) {
             res.render("list.ejs", newData)
          });        
     });
+
     app.get('/register', function (req,res) {
         res.render('register.ejs', shopData);                                                                     
     });                                                                                                 
     app.post('/registered', function (req,res) {
+
         const bcrypt = require('bcrypt');
         const saltRounds = 10;
         const plainPassword = req.body.password;
@@ -69,33 +69,29 @@ module.exports = function(app, shopData) {
             if (err) {
                 return console.error(err.message);
             }
-    
             if (results.length === 0) {
                 return res.send('User does not exist');
             }
-    
-          
+
             let hashedPassword = results[0].password;
     
             // Compare the password supplied with the password in the database
             bcrypt.compare(enteredPassword, hashedPassword, function(compareErr, result) {
                 if (compareErr) {
-                    
                     return console.error(compareErr.message);
                 }
                 else if (result == true) {
-                    
                     res.send('Welcome ' + results[0].first + ' ' + results[0].last);
                 }
                 else {
-                    
                     res.send('Incorrect password username combination');
                 }
             });
         });
     });
+
     app.get('/bookings', function(req, res) {
-        let sqlquery = "SELECT * FROM bookings"; // query database to get all the hotels
+        let sqlquery = "SELECT * FROM bookings"; // query database to get all the bookings
         // execute sql query
         db.query(sqlquery, (err, result) => {
             if (err) {
@@ -123,7 +119,7 @@ module.exports = function(app, shopData) {
         let userCheckQuery = "SELECT * FROM users WHERE userN = ?";
         let hotelCheckQuery = "SELECT * FROM hotels WHERE name = ?";
         let insertBookingQuery = "INSERT INTO bookings (userN, name) VALUES (?, ?)";
-        let updateHotelQuery = "UPDATE hotels SET booked = 'Reserved' WHERE name = ?";
+        let updateVacancyQuery = "UPDATE hotels SET booked = 'Reserved' WHERE name = ?";
     
         // Check if userN exists in the users table
         db.query(userCheckQuery, req.body.userN, (userErr, userResult) => {
@@ -149,7 +145,7 @@ module.exports = function(app, shopData) {
                     }
     
                     // Update the 'booked' status in the hotels table to 'Reserved'
-                    db.query(updateHotelQuery, [req.body.hotels], (updateErr, updateResult) => {
+                    db.query(updateVacancyQuery, [req.body.hotels], (updateErr, updateResult) => {
                         if (updateErr) {
                             return console.error(updateErr.message);
                         }
